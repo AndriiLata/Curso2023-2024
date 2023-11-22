@@ -51,9 +51,9 @@ for s, p, o in g:
 """**TASK 6.4: Add to the individual JaneSmith the email address, fullName, given and family names**"""
 
 g.add((ns.JaneSmith, ns.email, Literal("janesmith@gmail.com")))
-g.add((ns.JaneSmith, ns.fullName, Literal("Jane Smith")))
+g.add((ns.JaneSmith, ns.FN, Literal("Jane Smith")))
 g.add((ns.Jane_mith, ns.Given, Literal("Jane")))
-g.add((ns.JaneSmith, ns.familyName, Literal("Smith")))
+g.add((ns.JaneSmith, ns.Family, Literal("Smith")))
 
 for s, p, o in g.triples((ns.JaneSmith, None, None)):
   print(s,p,o)
