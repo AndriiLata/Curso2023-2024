@@ -23,25 +23,51 @@ g.parse(github_storage+"/rdf/example6.rdf", format="xml")
 
 """**TASK 7.1: List all subclasses of "LivingThing" with RDFLib and SPARQL**"""
 
+#SPARQL
 q1 = f"""SELECT ?subclass
         WHERE {{ ?subclass rdfs:subClassOf ns:LivingThing. }} """
+
+#RDFLIB
+ns = Namespace("http://somewhere#")
+lts = set()
+for subj, obj in g.subject_objects(predicate=RDFS.subClassOf):
+    if obj == ns.LivingThing:
+        lts.add(subj)
+
+#RESULTS
+print('SPARQL:')
 for r in g.query(q1):
   print(r.subclass)
+print('RDFLIB:')
+for subclass in lts:
+    print(subclass)
 
 """**TASK 7.2: List all individuals of "Person" with RDFLib and SPARQL (remember the subClasses)**
 
 """
 
+#sparql
 q2 = f"""SELECT ?individuals
         WHERE {{ ?individuals a ns:Person . }}"""
 
+# rdflib
+p_i = set()
+for subj, _, _ in g.triples((None, RDF.type, ns.Person)):
+    p_i.add(subj)
+
+# results
+print('SPARQL:')
 for r in g.query(q2):
-  print(r.individuals)
+    print(r.individuals)
+print('RDFLIB:')
+for person_individual in p_i:
+    print(person_individual)
 
 """**TASK 7.3: List all individuals of "Person" or "Animal" and all their properties including their class with RDFLib and SPARQL. You do not need to list the individuals of the subclasses of person**
 
 """
 
+#SPARQL
 q3 = f"""SELECT ?individual ?property ?value ?class
         WHERE {{
           {{
@@ -56,6 +82,14 @@ q3 = f"""SELECT ?individual ?property ?value ?class
             BIND("Animal" AS ?class)
           }}
         }}"""
+
+#RDFLIB
+individuals = set()
+for subj, _, obj in g.triples((None, RDF.type, ns.Person)):
+    individuals.add(subj)
+for subj, _, obj in g.triples((None, RDF.type, ns.Animal)):
+    individuals.add(subj)
+
 
 for r in g.query(q3):
     print(r)
